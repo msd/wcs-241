@@ -324,7 +324,7 @@ void analyse(const unsigned char *packet, int verbose)
 				{
 					printf("ACK ");
 				}
-				if (tcp_header->urg);
+				if (tcp_header->urg)
 				{
 					printf("URG");
 				}
@@ -333,7 +333,7 @@ void analyse(const unsigned char *packet, int verbose)
 			const int
 				tcp_hdr_len = tcp_header->doff * 4,
 				tcp_payload_len = ntohs(ipv4_header->ip_len) - (ipv4_header->ip_hl * 4) - tcp_hdr_len;
-			const char *tcp_payload = ip_payload + tcp_hdr_len;
+			const unsigned char *tcp_payload = ip_payload + tcp_hdr_len;
 			/* END TCP DATA */
 
 			/* SYN FLOODING DETECT */
@@ -358,7 +358,7 @@ void analyse(const unsigned char *packet, int verbose)
 			}
 
 			/* BLACKLISTED URL DETECTION */
-			if (tcp_dest == 80 && is_blacklist_req(tcp_payload, tcp_payload_len))
+			if (tcp_dest == 80 && is_blacklist_req((char*) tcp_payload, tcp_payload_len))
 			{
 				if (show_detections || verbose)
 				{
